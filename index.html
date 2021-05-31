@@ -1,0 +1,148 @@
+<html>
+<head>
+	<title>Covid 19 Cases</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<h1 class="text-center">Corona Virus Cases</h1><br>
+<div class="input-group mb-3">
+  <input type="text" class="form-control" placeholder="Search by Country.." aria-describedby="basic-addon2" id="countryName">
+  <div class="input-group-append">
+    <button class="btn btn-primary" type="button" onclick="getCountryData()">Search</button>
+  </div>
+</div>
+<button class="btn btn-primary" onclick="IndiaData()">Search for India</button>&nbsp;&nbsp;
+<button class="btn btn-primary" onclick="globalData()">Global Cases</button>
+	</div>
+	<div class="container">
+		<br>
+		<h2 id="countryResult"></h2>
+		
+
+		<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Total Cases</th>
+				<th>New Cases</th>
+				<th>Total Recovered</th>
+				<th>New Recovered</th>
+				<th>Total Deaths</th>
+				<th>New Deaths</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td id = "TC" style="color:#F5552E; font-weight: bold;"></td>
+				<td id = "NC" style="color:#F5552E; font-weight: bold;"></td>
+				<td id = "TR" style="color:#24CF24; font-weight: bold;"></td>
+				<td id = "NR" style="color:#24CF24; font-weight: bold;"></td>
+				<td id = "TD" style="color:grey; font-weight: bold;"></td>
+				<td id = "ND" style="color:grey; font-weight: bold;"></td>
+			</tr>
+	    </tbody>
+		</table>	
+	</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+
+	function getCountryData(){
+		var text = document.getElementById("countryName").value;
+		var country = "";
+		country += text.charAt(0).toUpperCase();
+		for(var i=1;i<text.length;i++){
+			country += text.charAt(i).toLowerCase();
+		}
+
+		var TotalConfirmed = "";
+		var NewConfirmed = "";
+		var NewDeaths = "";
+		var TotalDeaths = "";
+		var NewRecovered = "";
+		var TotalRecovered = "";
+		var f = false;
+		var url = "https://api.covid19api.com/summary";
+			$.get(url,function(data){
+				for(x in data.Countries) {
+					if(data.Countries[x].Country==country){
+						TotalRecovered = data.Countries[x].TotalRecovered.toString();
+						NewRecovered = data.Countries[x].NewRecovered.toString();
+						TotalDeaths = data.Countries[x].TotalDeaths.toString();
+						NewDeaths = data.Countries[x].NewDeaths.toString();
+						NewConfirmed = data.Countries[x].NewConfirmed.toString();
+						TotalConfirmed = data.Countries[x].TotalConfirmed.toString();
+						document.getElementById("countryResult").innerHTML = country;
+						document.getElementById("TC").innerHTML = TotalConfirmed;
+						document.getElementById("NC").innerHTML = NewConfirmed;
+						document.getElementById("ND").innerHTML = NewDeaths;
+						document.getElementById("TD").innerHTML = TotalDeaths;
+						document.getElementById("NR").innerHTML = NewRecovered;
+						document.getElementById("TR").innerHTML = TotalRecovered;
+						console.log(data.Countries[x].Date);
+						f = true;
+						break;
+					}
+				}
+				if(f==false){
+					document.getElementById("countryResult").innerHTML = "Invalid Country Name";
+						document.getElementById("TC").innerHTML = "-";
+						document.getElementById("NC").innerHTML = "-";
+						document.getElementById("ND").innerHTML = "-";
+						document.getElementById("TD").innerHTML = "-";
+						document.getElementById("NR").innerHTML = "-";
+						document.getElementById("TR").innerHTML = "-";
+				}
+		});
+	}
+
+	function IndiaData(){
+		var TotalConfirmed = "";
+		var NewConfirmed = "";
+		var NewDeaths = "";
+		var TotalDeaths = "";
+		var NewRecovered = "";
+		var TotalRecovered = "";
+		var url = "https://api.covid19api.com/summary";
+			$.get(url,function(data){
+				for(x in data.Countries) {
+					if(data.Countries[x].Country=="India"){
+						TotalRecovered = data.Countries[x].TotalRecovered.toString();
+						NewRecovered = data.Countries[x].NewRecovered.toString();
+						TotalDeaths = data.Countries[x].TotalDeaths.toString();
+						NewDeaths = data.Countries[x].NewDeaths.toString();
+						NewConfirmed = data.Countries[x].NewConfirmed.toString();
+						TotalConfirmed = data.Countries[x].TotalConfirmed.toString();
+						document.getElementById("countryResult").innerHTML = "India";
+						document.getElementById("TC").innerHTML = TotalConfirmed;
+						document.getElementById("NC").innerHTML = NewConfirmed;
+						document.getElementById("ND").innerHTML = NewDeaths;
+						document.getElementById("TD").innerHTML = TotalDeaths;
+						document.getElementById("NR").innerHTML = NewRecovered;
+						document.getElementById("TR").innerHTML = TotalRecovered;
+					}
+				}	
+		});
+	}
+
+	function globalData(){
+		var TotalConfirmed = "";
+		var NewConfirmed = "";
+		var NewDeaths = "";
+		var TotalDeaths = "";
+		var NewRecovered = "";
+		var TotalRecovered = "";
+		var url = "https://api.covid19api.com/summary";
+			$.get(url,function(data){
+						document.getElementById("countryResult").innerHTML = "Global Cases";
+						document.getElementById("TC").innerHTML = data.Global.TotalConfirmed;
+						document.getElementById("NC").innerHTML = data.Global.NewConfirmed;
+						document.getElementById("ND").innerHTML = data.Global.NewDeaths;
+						document.getElementById("TD").innerHTML = data.Global.TotalDeaths;
+						document.getElementById("NR").innerHTML = data.Global.NewRecovered;
+						document.getElementById("TR").innerHTML = data.Global.TotalRecovered;
+
+		});
+	}
+</script>
+</html>
